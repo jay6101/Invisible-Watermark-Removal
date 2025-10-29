@@ -1,0 +1,124 @@
+# Large datasets and archives
+StegaStamp/400x400_paired_data.tar.gz
+StegaStamp/400x400_paired_data/
+StegaStamp/400x400/
+
+# Model files and checkpoints
+StegaStamp/saved_models/
+*.h5
+*.hdf5
+*.pkl
+*.pth
+*.pt
+*.ckpt
+*.pb
+*.onnx
+*.tflite
+*.weights
+
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+*.tif
+*.webp
+*.svg
+*.ico
+*.raw
+
+# Text files
+*.txt
+
+# Data and output directories
+data/
+datasets/
+output/
+outputs/
+results/
+experiments/
+logs/
+checkpoints/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.cache/
+
+# Large data formats
+*.npy
+*.npz
+*.csv
+*.json
+*.xml
+*.parquet
+*.feather
+*.hdf
+*.mat
+
+# Compressed files
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# Exception: Keep requirements.txt and README files
+!requirements.txt
+!README.txt
+!README.md
+!**/README.md
+!LICENSE.txt
+
