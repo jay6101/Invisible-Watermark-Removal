@@ -33,14 +33,14 @@ StegaStamp/saved_models/
 *.txt
 
 # Data and output directories
-data/
-datasets/
-output/
-outputs/
-results/
-experiments/
-logs/
-checkpoints/
+# data/
+# datasets/
+# output/
+# outputs/
+# results/
+# experiments/
+# logs/
+# checkpoints/
 
 # Python artifacts
 __pycache__/
@@ -121,4 +121,8 @@ venv.bak/
 !README.md
 !**/README.md
 !LICENSE.txt
+!alex.pth
+!vgg.pth
+!squeeze.pth
+
 
