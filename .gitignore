@@ -17,7 +17,7 @@ StegaStamp/saved_models/
 *.weights
 
 # Image files
-*.png
+# *.png
 *.jpg
 *.jpeg
 *.gif
