@@ -1,7 +1,7 @@
 # Large datasets and archives
-StegaStamp/400x400_paired_data.tar.gz
-StegaStamp/400x400_paired_data/
-StegaStamp/400x400/
+# StegaStamp/400x400_paired_data.tar.gz
+# StegaStamp/400x400_paired_data/
+# StegaStamp/400x400/
 
 # Model files and checkpoints
 StegaStamp/saved_models/
@@ -17,7 +17,7 @@ StegaStamp/saved_models/
 *.weights
 
 # Image files
-*.png
+# *.png
 *.jpg
 *.jpeg
 *.gif

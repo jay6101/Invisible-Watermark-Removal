@@ -1,4 +1,4 @@
-import bchlib
+# import bchlib
 import glob
 import os
 from PIL import Image,ImageOps
@@ -47,7 +47,7 @@ def main():
     width = 400
     height = 400
 
-    bch = bchlib.BCH(BCH_POLYNOMIAL, BCH_BITS)
+    # bch = bchlib.BCH(BCH_POLYNOMIAL, BCH_BITS)
 
     # if len(args.secret) > 7:
     #     print('Error: Can only encode 56bits (7 characters) with ECC')

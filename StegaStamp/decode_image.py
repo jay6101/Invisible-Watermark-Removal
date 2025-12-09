@@ -40,6 +40,7 @@ def main():
     bch = bchlib.BCH(BCH_POLYNOMIAL, BCH_BITS)
 
     for filename in files_list:
+        file_id = filename.split('/')[-1].split('.')[0].split('_')[0]
         image = Image.open(filename).convert("RGB")
         image = np.array(ImageOps.fit(image,(400, 400)),dtype=np.float32)
         image /= 255.
@@ -48,24 +49,24 @@ def main():
 
         secret = sess.run([output_secret],feed_dict=feed_dict)[0][0]
         print(''.join([str(int(x)) for x in secret.tolist()]))
-        print(len(secret))
 
-        packet_binary = "".join([str(int(bit)) for bit in secret[:96]])
-        packet = bytes(int(packet_binary[i : i + 8], 2) for i in range(0, len(packet_binary), 8))
-        packet = bytearray(packet)
 
-        data, ecc = packet[:-bch.ecc_bytes], packet[-bch.ecc_bytes:]
+        # packet_binary = "".join([str(int(bit)) for bit in secret[:96]])
+        # packet = bytes(int(packet_binary[i : i + 8], 2) for i in range(0, len(packet_binary), 8))
+        # packet = bytearray(packet)
 
-        bitflips = bch.decode_inplace(data, ecc)
+        # data, ecc = packet[:-bch.ecc_bytes], packet[-bch.ecc_bytes:]
 
-        if bitflips != -1:
-            try:
-                code = data.decode("utf-8")
-                print(filename, code)
-                continue
-            except:
-                continue
-        print(filename, 'Failed to decode')
+        # bitflips = bch.decode_inplace(data, ecc)
+
+        # if bitflips != -1:
+        #     try:
+        #         code = data.decode("utf-8")
+        #         print(filename, code)
+        #         continue
+        #     except:
+        #         continue
+        # print(filename, 'Failed to decode')
 
 
 if __name__ == "__main__":
