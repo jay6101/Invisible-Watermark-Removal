@@ -55,8 +55,7 @@ The script `encode_image.py` encodes a 100-bit random binary secret into an imag
 python encode_image.py \
   saved_models/stegastamp_pretrained \
   --image test_im.png \
-  --save_dir out/ \
-  --secret "Stega!!"
+  --save_dir out/ 
 ```
 
 ### Encode a directory of images:
