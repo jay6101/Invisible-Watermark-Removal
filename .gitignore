@@ -30,7 +30,7 @@ StegaStamp/saved_models/
 *.raw
 
 # Text files
-*.txt
+# *.txt
 
 # Data and output directories
 # data/
