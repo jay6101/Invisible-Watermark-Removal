@@ -1,5 +1,6 @@
 import bchlib
 import glob
+import os
 from PIL import Image, ImageOps
 import numpy as np
 import tensorflow as tf
@@ -16,6 +17,7 @@ def main():
     parser.add_argument('model', type=str)
     parser.add_argument('--image', type=str, default=None)
     parser.add_argument('--images_dir', type=str, default=None)
+    parser.add_argument('--save_dir', type=str, default=None)
     parser.add_argument('--secret_size', type=int, default=100)
     args = parser.parse_args()
 
@@ -39,6 +41,10 @@ def main():
 
     bch = bchlib.BCH(BCH_POLYNOMIAL, BCH_BITS)
 
+    if args.save_dir is not None:
+        if not os.path.exists(args.save_dir):
+            os.makedirs(args.save_dir)
+
     for filename in files_list:
         file_id = filename.split('/')[-1].split('.')[0].split('_')[0]
         image = Image.open(filename).convert("RGB")
@@ -48,7 +54,16 @@ def main():
         feed_dict = {input_image:[image]}
 
         secret = sess.run([output_secret],feed_dict=feed_dict)[0][0]
-        print(''.join([str(int(x)) for x in secret.tolist()]))
+        decoded_secret = ''.join([str(int(x)) for x in secret.tolist()])
+        print(f'{filename}: {decoded_secret}')
+        
+        # Save decoded secret to file if save_dir is provided
+        if args.save_dir is not None:
+            save_name = filename.split('/')[-1].split('.')[0]
+            output_file = os.path.join(args.save_dir, f'{save_name}_decoded.txt')
+            with open(output_file, 'w') as f:
+                f.write(decoded_secret)
+            print(f'Saved to: {output_file}')
 
 
         # packet_binary = "".join([str(int(bit)) for bit in secret[:96]])

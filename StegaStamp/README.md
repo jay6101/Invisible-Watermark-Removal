@@ -80,7 +80,7 @@ For each input image, the encoder creates a directory containing:
 **Note:** Images are automatically resized to 400x400 pixels.
 
 ## Decoding a Message
-The script `decode_image.py` decodes the binary secret from a StegaStamp watermarked image.
+The script `decode_image.py` decodes the binary secret from a StegaStamp watermarked image. The decoded secret can be printed to the console and optionally saved to text files.
 
 ### Decode a single image:
 
@@ -88,6 +88,15 @@ The script `decode_image.py` decodes the binary secret from a StegaStamp waterma
 python decode_image.py \
   saved_models/stegastamp_pretrained \
   --image out/000000/000000_hidden.png
+```
+
+### Decode a single image and save the result:
+
+```bash
+python decode_image.py \
+  saved_models/stegastamp_pretrained \
+  --image out/000000/000000_hidden.png \
+  --save_dir decoded_output/
 ```
 
 ### Decode a directory of images:
@@ -98,7 +107,18 @@ python decode_image.py \
   --images_dir out/
 ```
 
-The decoded binary secret (100 bits) will be printed to the console.
+### Decode a directory of images and save all results:
+
+```bash
+python decode_image.py \
+  saved_models/stegastamp_pretrained \
+  --images_dir out/ \
+  --save_dir decoded_output/
+```
+
+### Output
+- The decoded binary secret (100 bits) is printed to the console
+- If `--save_dir` is specified, each decoded secret is saved to a text file named `{original_filename}_decoded.txt`
 
 ## Requirements
 - Python 3.7
