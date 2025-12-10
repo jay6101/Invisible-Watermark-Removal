@@ -100,7 +100,7 @@ venv.bak/
 *.npy
 *.npz
 *.csv
-*.json
+# *.json
 *.xml
 *.parquet
 *.feather
