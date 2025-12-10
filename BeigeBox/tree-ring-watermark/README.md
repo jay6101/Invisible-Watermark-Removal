@@ -1,55 +1,83 @@
-# Tree-Ring Watermarks: Fingerprints for Diffusion Images that are Invisible and Robust
+# Tree-Ring Watermark: Horizontal Shift Attack Evaluation
 
-<img src=scripts/teaser.png  width="80%" height="60%">
+This repository contains code for evaluating Tree-Ring watermarks under horizontal shift attacks.
 
-This code is the official implementation of [Tree-Ring Watermarks](http://arxiv.org/abs/2305.20030).
-
-If you have any questions, feel free to email Yuxin (<ywen@umd.edu>).
+Based on the paper: [Tree-Ring Watermarks: Fingerprints for Diffusion Images that are Invisible and Robust](http://arxiv.org/abs/2305.20030)
 
 ## About
-We propose Tree-Ring Watermarking to watermark diffusion model outputs. Tree-Ring Watermarking chooses the initial noise array so that its Fourier transform contains a carefully constructed pattern near its center. This pattern is called the key. This initial noise vector is then converted into an image using the standard diffusion pipeline with no modifications. To detect the watermark in an image, the diffusion model is inverted to retrieve the original noise array used for generation. This array is then checked to see whether the key is present.
+
+Tree-Ring Watermarking embeds watermarks in diffusion model outputs by modifying the initial noise array's Fourier transform. The watermark can be detected by inverting the diffusion process and checking for the pattern in the frequency domain.
+
+This implementation evaluates the robustness of Tree-Ring watermarks against **horizontal shift attacks** (translate-and-restore).
 
 ## Dependencies
+
 - PyTorch == 1.13.0
 - transformers == 4.23.1
 - diffusers == 0.11.1
 - datasets
 
-Note: higher diffusers version may not be compatible with the DDIM inversion code.
+**Note:** Higher diffusers versions may not be compatible with the DDIM inversion code.
 
 ## Usage
 
-### Perform main experiments and calculate CLIP Score
-For non-adversarial case, you can simply run:
-```
-python run_tree_ring_watermark.py --run_name no_attack --w_channel 3 --w_pattern ring --start 0 --end 1000 --with_tracking --reference_model ViT-g-14 --reference_model_pretrain laion2b_s12b_b42k
-```
+### Horizontal Shift Attack
 
-You can modify arguments to perform attack. For example, for rotation with 75 degrees:
-```
-python run_tree_ring_watermark.py --run_name rotation --w_channel 3 --w_pattern ring --r_degree 75 --start 0 --end 1000 --with_tracking
-```
+Run the watermark evaluation with horizontal shift attack:
 
-For more adversarial cases, see [here](scripts/tree_ring.sh).
-
-For other watermark types mentioned in the paper, you can check [scripts/](scripts/).
-
-### Calculate FID
-You can download 5000 COCO examples used in the paper [here](https://drive.google.com/drive/folders/1saWx-B3vJxzspJ-LaXSEn5Qjm8NIs3r0?usp=sharing). Feel free to add more data or other datasets according to the format of `fid_outputs/coco/meta_data.json`.
-
-Then, to calculate FID, you may run:
-```
-python run_tree_ring_watermark_fid.py --run_name fid_run --w_channel 3 --w_pattern ring --start 0 --end 5000 --with_tracking --run_no_w
+```bash
+python run_tree_ring_watermark.py \
+  --run_name horizontal_shift_attack \
+  --w_channel 3 \
+  --w_pattern ring \
+  --attack_shift 14 \
+  --start 0 \
+  --end 100 \
+  --save_images \
+  --image_out_dir ./outputs
 ```
 
-### Perform main experiments for Imagenet Models
-You can get the pre-trained models [here](https://github.com/openai/guided-diffusion). For example, the link of the model used by the paper is [256x256 diffusion](https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion.pt). Then, you may follow the [script](scripts/tree_ring_imagenet.sh) to run the experiments.
+**Key Arguments:**
+- `--run_name`: Name for this experimental run
+- `--w_channel`: Watermarked channel index (0-3, or -1 for all channels)
+- `--w_pattern`: Watermark pattern type (`ring` recommended)
+- `--attack_shift`: Number of pixels to shift horizontally (default: 40)
+- `--start`, `--end`: Range of images to process
+- `--save_images`: Save generated images to disk
+- `--image_out_dir`: Output directory for images and results
 
-## Parameters
-Crucial hyperparameters for Tree-Ring:
+### Output Structure
 
-- `w_channel`: the index of the watermarked channel. If set as -1, watermark all channels.
-- `w_pattern`: watermark type: zeros, rand, ring.
-- `w_radius`: watermark radius.
+The script generates the following directory structure:
 
-## Suggestions and Pull Requests are welcome!
+```
+outputs/
+└── {run_name}/
+    ├── clean/                    # Non-watermarked images
+    ├── watermarked/              # Watermarked images
+    ├── attacked_clean/           # Shifted non-watermarked images
+    ├── attacked_watermarked/     # Shifted watermarked images
+    └── results.json              # Detection metrics and results
+```
+
+### Results Metrics
+
+The `results.json` file contains:
+- **AUC**: Area under ROC curve
+- **TPR@1%FPR**: True positive rate at 1% false positive rate
+- **TPR_on_attacked_at_thresh**: Detection rate on attacked watermarked images
+- Per-sample detection flags for clean, watermarked, and attacked images
+
+## Pre-computed Results
+
+Pre-computed results for 100 and 1000 images are available at:
+[https://drive.google.com/drive/folders/14u5MMsiTd70ywTCJc_QNICoiod_Qo6lP?usp=sharing](https://drive.google.com/drive/folders/14u5MMsiTd70ywTCJc_QNICoiod_Qo6lP?usp=sharing)
+
+- `outputs_100/`: Results for 100 images
+- `outputs_1000/`: Results for 1000 images
+
+## Notes
+
+- The horizontal shift attack translates images to the right and restores the left columns
+- The script evaluates watermark detection on clean, watermarked, and attacked images
+- Results are saved as JSON for further analysis
