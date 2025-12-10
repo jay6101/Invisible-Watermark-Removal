@@ -1,125 +1,128 @@
-## StegaStamp: Invisible Hyperlinks in Physical Photographs [[Project Page]](http://www.matthewtancik.com/stegastamp)
+# StegaStamp Watermark Removal Using VAE
 
-### CVPR 2020
-**[Matthew Tancik](https://www.matthewtancik.com), [Ben Mildenhall](http://people.eecs.berkeley.edu/~bmild/), [Ren Ng](https://scholar.google.com/citations?hl=en&user=6H0mhLUAAAAJ)**
-*University of California, Berkeley*
+This repository contains tools for removing StegaStamp watermarks from images using Variational Autoencoders (VAE).
 
-![](https://github.com/tancik/StegaStamp/blob/master/docs/teaser.png)
+## Overview
 
+The watermark removal process consists of three main stages:
 
-## Introduction
-This repository contains code for encoding and decoding invisible watermarks in images using StegaStamp. The project explores hiding data (100-bit binary secrets) in images while maintaining perceptual similarity. This implementation uses pretrained models to encode random binary secrets into images and decode them back.
-
-## Citation
-If you find our work useful, please consider citing:
-```
-    @inproceedings{2019stegastamp,
-        title={StegaStamp: Invisible Hyperlinks in Physical Photographs},
-        author={Tancik, Matthew and Mildenhall, Ben and Ng, Ren},
-        booktitle={IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-        year={2020}
-    }
-```
+1. **VAE Fine-tuning**: Train a VAE to reconstruct watermark-free images from watermarked inputs
+2. **Evaluation**: Test the fine-tuned VAE and measure watermark removal effectiveness
+3. **Post-processing**: Apply test-time optimization and color/contrast transfer for improved results
 
 ## Installation
 
-### Environment Setup
-Create and activate the conda environment using the provided `environment.yml` file:
-
 ```bash
-conda env create -f environment.yml
-conda activate stega
+pip install -r requirements.txt
 ```
 
-This will install Python 3.7, TensorFlow 1.13, and all required dependencies including:
-- TensorFlow 1.13.1
-- NumPy
-- Pillow
-- OpenCV
-- bchlib
-- tqdm
+## Dataset Structure
 
-### Download Pretrained Models
-Download the pretrained StegaStamp models from Google Drive:
+Your dataset should be organized as follows:
 
-[Download Models](https://drive.google.com/file/d/1mwJ6YBWrEN7OpgyWZGFT0qk3D6bUjF_6/view?usp=sharing)
-
-Extract the models to a `saved_models/` directory in your project folder.
-
-## Encoding a Message
-The script `encode_image.py` encodes a 100-bit random binary secret into an image. The encoder generates both the watermarked image and its inverse version.
-
-### Encode a single image:
-
-```bash
-python encode_image.py \
-  saved_models/stegastamp_pretrained \
-  --image test_im.png \
-  --save_dir out/ 
+```
+data_root/
+├── 000000/
+│   ├── 000000_hidden.png      # Watermarked image
+│   ├── 000000_hidden_inv.png  # Ground truth (watermark-free)
+│   └── 000000_secret.txt      # 100-bit secret (optional, for evaluation)
+├── 000001/
+│   ├── 000001_hidden.png
+│   ├── 000001_hidden_inv.png
+│   └── 000001_secret.txt
+└── ...
 ```
 
-### Encode a directory of images:
+## Usage
+
+### 1. Train VAE
+
+Fine-tune a VAE model to remove watermarks:
 
 ```bash
-python encode_image.py \
-  saved_models/stegastamp_pretrained \
-  --images_dir input_images/ \
-  --save_dir out/
+python train_vae.py \
+  --data_root /path/to/dataset \
+  --output_dir ./vae_finetuned \
+  --epochs 10 \
+  --batch_size 8 \
+  --lr 1e-5
 ```
 
-### Output Files
-For each input image, the encoder creates a directory containing:
-- `*_hidden.png` - Watermarked image
-- `*_hidden_inv.png` - Inverse watermarked image
-- `*_residual.png` - Residual applied to the original image
-- `*_residual_inv.png` - Inverse residual
-- `*_secret.txt` - The binary secret (100 bits)
-- `*_secret_inv.txt` - The inverted binary secret
+**Arguments:**
+- `--data_root`: Path to dataset root directory
+- `--output_dir`: Directory to save the fine-tuned model
+- `--epochs`: Number of training epochs (default: 10)
+- `--batch_size`: Training batch size (default: 8)
+- `--lr`: Learning rate (default: 1e-5)
+- `--vae_model`: Pre-trained VAE model (default: "stabilityai/sdxl-vae")
 
-**Note:** Images are automatically resized to 400x400 pixels.
+### 2. Evaluate VAE
 
-## Decoding a Message
-The script `decode_image.py` decodes the binary secret from a StegaStamp watermarked image. The decoded secret can be printed to the console and optionally saved to text files.
-
-### Decode a single image:
+Test watermark removal effectiveness using StegaStamp decoder:
 
 ```bash
-python decode_image.py \
-  saved_models/stegastamp_pretrained \
-  --image out/000000/000000_hidden.png
+python evaluate_vae.py \
+  --data_root /path/to/dataset \
+  --vae_model ./vae_finetuned \
+  --decoder_model /path/to/stegastamp_decoder \
+  --output_dir ./vae_outputs \
+  --results_csv ./evaluation_results.csv
 ```
 
-### Decode a single image and save the result:
+**Arguments:**
+- `--data_root`: Path to dataset root directory
+- `--vae_model`: Path to fine-tuned VAE model
+- `--decoder_model`: Path to StegaStamp decoder model
+- `--output_dir`: Directory to save VAE reconstructions
+- `--results_csv`: Path to save evaluation results CSV
+- `--batch_size`: Inference batch size (default: 16)
+
+**Evaluation Metrics:**
+- **Hamming Distance**: Number of differing bits between decoded and original secret
+- **Accuracy**: Percentage of correctly decoded bits
+- **Detection Rate**: Percentage of images with >50% bit accuracy
+
+### 3. Post-process (Optional)
+
+Apply test-time optimization and color/contrast transfer for improved results:
 
 ```bash
-python decode_image.py \
-  saved_models/stegastamp_pretrained \
-  --image out/000000/000000_hidden.png \
-  --save_dir decoded_output/
+python postprocess_vae.py \
+  --data_root /path/to/dataset \
+  --finetuned_vae ./vae_finetuned \
+  --refiner_vae stabilityai/sdxl-vae \
+  --output_dir ./postprocessed_outputs \
+  --results_csv ./postprocessing_metrics.csv \
+  --test_time_steps 10
 ```
 
-### Decode a directory of images:
+**Arguments:**
+- `--data_root`: Path to dataset root directory
+- `--finetuned_vae`: Path to fine-tuned VAE model
+- `--refiner_vae`: Path to refiner VAE model (default: "stabilityai/sdxl-vae")
+- `--output_dir`: Directory to save final outputs
+- `--results_csv`: Path to save metrics CSV
+- `--test_time_steps`: Number of test-time optimization steps (default: 10)
+- `--test_time_lr`: Learning rate for test-time optimization (default: 1e-4)
 
-```bash
-python decode_image.py \
-  saved_models/stegastamp_pretrained \
-  --images_dir out/
-```
+**Quality Metrics:**
+- **PSNR**: Peak Signal-to-Noise Ratio (higher is better)
+- **SSIM**: Structural Similarity Index (higher is better)
+- **LPIPS**: Learned Perceptual Image Patch Similarity (lower is better)
 
-### Decode a directory of images and save all results:
+## Notes
 
-```bash
-python decode_image.py \
-  saved_models/stegastamp_pretrained \
-  --images_dir out/ \
-  --save_dir decoded_output/
-```
-
-### Output
-- The decoded binary secret (100 bits) is printed to the console
-- If `--save_dir` is specified, each decoded secret is saved to a text file named `{original_filename}_decoded.txt`
+- GPU with at least 8GB VRAM is recommended
+- Training time depends on dataset size 
+- Post-processing is computationally intensive (test-time optimization per image)
 
 ## Requirements
-- Python 3.7
-- TensorFlow 1.13
-- CUDA-compatible GPU (recommended for faster processing)
+
+- Python 3.8+
+- CUDA-capable GPU (recommended)
+- StegaStamp decoder model (different conda env recommended, see README.md of StegaStamp)
+
+## License
+
+This code is provided for research purposes only.
+
