@@ -1,8 +1,8 @@
-# Invisible Watermark Removal Challenge — 1st Place Solution
+# Invisible Watermark Removal Challenge — 1st Place Solution Implementation
 
 **NeurIPS 2024 Competition**
 
-This repository contains our first-place solution for the Invisible Watermark Removal Challenge. We tackle two main tracks: **Black Box** (cluster-specific removal) and **Beige Box** (known watermark methods).
+This repository contains an implementation of the first-place solution from the paper ["First-Place Solution to NeurIPS 2024 Invisible Watermark Removal Challenge"](https://arxiv.org/abs/2508.21072) by Shamshad et al. Since the official code is not publicly available, we have recreated this implementation based on the paper's methodology. The solution tackles two main tracks: **Black Box** (cluster-specific removal) and **Beige Box** (known watermark methods).
 
 ## Competition Resources
 
@@ -144,27 +144,30 @@ Detailed metrics and results are available in the respective subdirectory README
 
 ## Citation
 
-If you use this work, please cite:
+This implementation is based on the following paper. If you use this code, please cite the original work:
 
 ```bibtex
-@inproceedings{invisible-watermark-removal-2024,
-  title={Invisible Watermark Removal Challenge - 1st Place Solution},
-  author={Your Team},
-  booktitle={NeurIPS 2024 Competition Track},
-  year={2024}
+@article{shamshad2025firstplace,
+  title={First-Place Solution to NeurIPS 2024 Invisible Watermark Removal Challenge},
+  author={Shamshad, Fahad and Bakr, Tameem and Shaaban, Yahia and Hussein, Noor and Nandakumar, Karthik and Lukas, Nils},
+  journal={arXiv preprint arXiv:2508.21072},
+  year={2025}
 }
 ```
+
+**Original Paper:** [https://arxiv.org/abs/2508.21072](https://arxiv.org/abs/2508.21072)
 
 ---
 
 ## License
 
-This code is provided for research purposes only.
+This code is provided for research and educational purposes only. This is an unofficial implementation created because the official code from the paper authors is not publicly available.
 
 ---
 
 ## Acknowledgments
 
+- Original paper authors: Fahad Shamshad, Tameem Bakr, Yahia Shaaban, Noor Hussein, Karthik Nandakumar, and Nils Lukas
 - NeurIPS 2024 Competition Organizers
 - Stability AI for pre-trained models
 - StegaStamp and Tree-Ring watermarking papers

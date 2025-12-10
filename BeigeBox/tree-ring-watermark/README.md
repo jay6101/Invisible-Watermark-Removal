@@ -1,8 +1,8 @@
 # Tree-Ring Watermark: Horizontal Shift Attack Evaluation
 
-This repository contains code for evaluating Tree-Ring watermarks under horizontal shift attacks.
+This directory implements the Tree-Ring watermark evaluation under horizontal shift attacks as described in the paper ["First-Place Solution to NeurIPS 2024 Invisible Watermark Removal Challenge"](https://arxiv.org/abs/2508.21072). This is an unofficial implementation created since the official code is not publicly available.
 
-Based on the paper: [Tree-Ring Watermarks: Fingerprints for Diffusion Images that are Invisible and Robust](http://arxiv.org/abs/2305.20030)
+The watermarking method being evaluated is based on: [Tree-Ring Watermarks: Fingerprints for Diffusion Images that are Invisible and Robust](http://arxiv.org/abs/2305.20030)
 
 ## About
 
@@ -81,3 +81,7 @@ Pre-computed results for 100 and 1000 images are available at:
 - The horizontal shift attack translates images to the right and restores the left columns
 - The script evaluates watermark detection on clean, watermarked, and attacked images
 - Results are saved as JSON for further analysis
+
+## License
+
+This code is provided for research and educational purposes only. This is an unofficial implementation based on the methodology described in the [original paper](https://arxiv.org/abs/2508.21072).

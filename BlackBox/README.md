@@ -1,6 +1,6 @@
 # Invisible Watermark Removal — Black Box Track
 
-This repository implements a cluster-specific black-box approach for removing TreeRing-style invisible watermarks from images.
+This directory implements the cluster-specific black-box approach from the paper ["First-Place Solution to NeurIPS 2024 Invisible Watermark Removal Challenge"](https://arxiv.org/abs/2508.21072) for removing TreeRing-style invisible watermarks from images. This is an unofficial implementation created since the official code is not publicly available.
 
 ## Available Resources
 
@@ -298,4 +298,4 @@ python evaluate_blackbox_image_quality_metrics.py
 
 ## License
 
-This code is provided for research purposes only.
+This code is provided for research and educational purposes only. This is an unofficial implementation based on the methodology described in the [original paper](https://arxiv.org/abs/2508.21072).

@@ -1,6 +1,6 @@
 # StegaStamp Watermark Removal Using VAE
 
-This repository contains tools for removing StegaStamp watermarks from images using Variational Autoencoders (VAE).
+This directory implements the VAE-based StegaStamp watermark removal approach from the paper ["First-Place Solution to NeurIPS 2024 Invisible Watermark Removal Challenge"](https://arxiv.org/abs/2508.21072). This is an unofficial implementation created since the official code is not publicly available.
 
 ## Overview
 
@@ -162,5 +162,5 @@ python postprocess_vae.py \
 
 ## License
 
-This code is provided for research purposes only.
+This code is provided for research and educational purposes only. This is an unofficial implementation based on the methodology described in the [original paper](https://arxiv.org/abs/2508.21072).
 
