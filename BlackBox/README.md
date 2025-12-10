@@ -117,7 +117,7 @@ data/clustered_images/
 
 You have two options for Cluster 1 captions:
 
-1. **Use our pre generated captions **
+1. **Use our pre generated captions**
    Download `cluster_mapping_with_captions.csv` from our shared drive and place it in the `data/` directory:
 
    Link: [cluster_mapping_with_captions.csv](https://drive.google.com/drive/folders/1GQB8-zycc7-A-BJqiUEnQ62at6LLfkfs) 
