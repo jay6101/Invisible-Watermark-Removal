@@ -16,6 +16,19 @@ The watermark removal process consists of three main stages:
 pip install -r requirements.txt
 ```
 
+## Pre-trained Model
+
+A pre-trained fine-tuned VAE model is available for download:
+
+**[Fine-tuned VAE Model & Notebook](https://drive.google.com/drive/folders/1CxOlB-kZ7u9-KeX92dMmP1wpXkG1w9l0?usp=sharing)**
+
+This folder contains:
+- `diffusion_pytorch_model.safetensors`: Fine-tuned VAE weights
+- `config.json`: Model configuration
+- `VAE_finetuning.ipynb`: Training notebook
+
+You can use this pre-trained model directly for evaluation without training from scratch.
+
 ## Dataset Structure
 
 Your dataset should be organized as follows:
@@ -35,9 +48,11 @@ data_root/
 
 ## Usage
 
-### 1. Train VAE
+### 1. Train VAE (Optional)
 
-Fine-tune a VAE model to remove watermarks:
+**Note:** You can skip this step and use the [pre-trained model](https://drive.google.com/drive/folders/1CxOlB-kZ7u9-KeX92dMmP1wpXkG1w9l0?usp=sharing) directly.
+
+To fine-tune your own VAE model to remove watermarks:
 
 ```bash
 python train_vae.py \
@@ -58,8 +73,19 @@ python train_vae.py \
 
 ### 2. Evaluate VAE
 
-Test watermark removal effectiveness using StegaStamp decoder:
+Test watermark removal effectiveness using StegaStamp decoder.
 
+**Using the pre-trained model:**
+```bash
+python evaluate_vae.py \
+  --data_root /path/to/dataset \
+  --vae_model /path/to/downloaded/pretrained_vae \
+  --decoder_model /path/to/stegastamp_decoder \
+  --output_dir ./vae_outputs \
+  --results_csv ./evaluation_results.csv
+```
+
+**Using your own fine-tuned model:**
 ```bash
 python evaluate_vae.py \
   --data_root /path/to/dataset \
@@ -84,8 +110,20 @@ python evaluate_vae.py \
 
 ### 3. Post-process (Optional)
 
-Apply test-time optimization and color/contrast transfer for improved results:
+Apply test-time optimization and color/contrast transfer for improved results.
 
+**Using the pre-trained model:**
+```bash
+python postprocess_vae.py \
+  --data_root /path/to/dataset \
+  --finetuned_vae /path/to/downloaded/pretrained_vae \
+  --refiner_vae stabilityai/sdxl-vae \
+  --output_dir ./postprocessed_outputs \
+  --results_csv ./postprocessing_metrics.csv \
+  --test_time_steps 10
+```
+
+**Using your own fine-tuned model:**
 ```bash
 python postprocess_vae.py \
   --data_root /path/to/dataset \
