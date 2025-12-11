@@ -99,7 +99,6 @@ venv.bak/
 # Large data formats
 *.npy
 *.npz
-*.csv
 # *.json
 *.xml
 *.parquet
